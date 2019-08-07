@@ -1,0 +1,203 @@
+---
+title: "Rendering Word Clouds"
+author: "Zhenxing Cheng"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Rendering Word Clouds}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+The [htmlwidgets](https://github.com/ramnathv/htmlwidgets) package is very interesting and powerful. All the time, I want to write my own html widgets, but I failed. This is my third try, finally I success! As I first try of using `htmlwidgets`, I hope you will tolerate some of the flaws of this R package, and I will improve it in the future. Next, let's use `hwordcloud`! 
+
+First, you can install it from `github`: 
+
+```{r eval=FALSE, include=TRUE}
+devtools::install_github('czxa/hwordcloud')
+# or just use git
+devtools::install_git("https://github.com/czxa/hwordcloud.git")
+```
+
+Also, I made a shiny application example for this package:
+
+```{r eval=FALSE, include=TRUE}
+dir <- system.file("examples", "hwordcloud", package = "hwordcloud")
+setwd(dir)
+shiny::shinyAppDir(".")
+```
+
+Enjoy your use!
+
+# Get Started
+
+## A Basic example
+
+We can use [wordcloud2](https://github.com/Lchiffon/wordcloud2)'s datesets to demonstrate：
+
+```{r echo=TRUE}
+library(hwordcloud)
+library(wordcloud2)
+df <- head(demoFreq, 50)
+hwordcloud(text = df$word, size = df$freq, 
+           width = "100%", height = "200px")
+```
+
+## Theme Parameter
+
+I hate complex codes, so I built some themes in this package. Just change theme parameter, you can render wordcloud in different apperance.
+
+
+### darkgreen
+
+```{r echo=TRUE}
+hwordcloud(text = df$word, size = df$freq, 
+           width = "100%", height = "300px",
+           theme = "darkgreen")
+```
+
+---
+
+### darkblue
+
+```{r echo=TRUE}
+hwordcloud(text = df$word, size = df$freq, 
+           width = "100%", height = "300px",
+           theme = "darkblue")
+```
+
+---
+
+### avocado
+
+```{r echo=TRUE}
+hwordcloud(text = df$word, size = df$freq, 
+           width = "100%", height = "300px",
+           theme = "avocado")
+```
+
+---
+
+### darkunica
+
+```{r echo=TRUE}
+hwordcloud(text = df$word, size = df$freq, 
+           width = "100%", height = "300px",
+           theme = "darkunica")
+```
+
+---
+
+### gray
+
+```{r echo=TRUE}
+hwordcloud(text = df$word, size = df$freq, 
+           width = "100%", height = "300px",
+           theme = "gray")
+```
+
+### gridlight
+
+```{r echo=TRUE}
+hwordcloud(text = df$word, size = df$freq, 
+           width = "100%", height = "300px",
+           theme = "gridlight")
+```
+
+---
+
+### grid
+
+```{r echo=TRUE}
+hwordcloud(text = df$word, size = df$freq, 
+           width = "100%", height = "300px",
+           theme = "grid")
+```
+
+
+### sandsignika
+
+```{r echo=TRUE}
+hwordcloud(text = df$word, size = df$freq, 
+           width = "100%", height = "300px",
+           theme = "sandsignika")
+```
+
+
+### sunset
+
+```{r echo=TRUE}
+hwordcloud(text = df$word, size = df$freq, 
+           width = "100%", height = "300px",
+           theme = "sunset")
+```
+
+
+## Other Parameter
+
+Title and subtitle are also can be customized.
+
+A complete example: 
+
+```{r echo=TRUE}
+hwordcloud(text = df$word, size = df$freq, 
+           width = "100%", height = "200px",
+           theme = "sunset",
+           title = "Word Cloud",
+           titleAlign = "center",
+           titleColor = "#333333",
+           titleSize = "20px",
+           subtitle = "czxa.top",
+           subtitleColor = "#666666",
+           subtitleAlign = "center",
+           subtitleSize = "16px")
+```
+
+## Using `hwordcloud` within RMarkdown documents
+
+Benefit from `htmlwidgets`, you can use `hwordcloud()` function in R Markdown document. For example, you can create a github document and code following codes in it, save it as a `.Rmd` documents, then `knit` it, you will find a word cloud embedded in it.
+
+```{r eval=FALSE}
+hwordcloud(text = df$word, size = df$freq, 
+               width = "100%", height = "400px",
+               theme = "sunset",
+               title = "Word Cloud",
+               titleAlign = "center",
+               titleColor = "#333333",
+               titleSize = "20px",
+               subtitle = "czxa.top",
+               subtitleColor = "#666666",
+               subtitleAlign = "center",
+               subtitleSize = "16px")
+```
+
+## Using `hwordcloud` within Shiny applications
+
+Here is a very simple shiny example:
+
+```{r eval=FALSE}
+library(shiny)
+library(wordcloud2)
+ui <- fluidPage(
+    titlePanel("word cloud example"),
+    mainPanel(
+      hwordcloudOutput("shinytest", height = "500px")
+    )
+)
+server <- function(input, output) {
+    df <- head(demoFreq, 50)
+    output$shinytest <- renderHwordcloud({
+        hwordcloud(text = df$word, size = df$freq)
+    })
+}
+shinyApp(ui = ui, server = server)
+```
